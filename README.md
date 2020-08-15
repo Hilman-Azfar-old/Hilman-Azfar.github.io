@@ -1,5 +1,3 @@
-CONCEPT DESIGNS
-
 ### Concept
 
 **Motivations**
