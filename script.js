@@ -110,7 +110,7 @@ let handleChange = (event) => {
         // force the new display
         showActive()
     } else {
-        alert('Start the damn game!')
+        alert("Click 'start' to play!")
     }
     event.target.value = '';
 }
