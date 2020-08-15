@@ -2,7 +2,7 @@ CONCEPT DESIGNS
 
 ### Concept
 
-** Motivations **
+**Motivations**
 
 This game will
 *	strengthen my understanding of dom and js
@@ -13,7 +13,7 @@ This game will
 *	deepen my understanding of scope
 *	be a gauge of my current understanding
 
-** Technical Requirements **
+**Technical Requirements**
 
 The game needs to:
 * **Display a game in the browser**
@@ -21,7 +21,7 @@ The game needs to:
 * **Include separate HTML / CSS / JavaScript files**
 * Use **Javascript** for **DOM manipulation** that is triggered by a **browser event**
 
-** Required Deliverables **
+**Required Deliverables**
 
 * A **non-broken game, built by you**, hosted somewhere on the internet
 * A **link to your hosted working game** in the URL section of your Github repo
@@ -39,20 +39,20 @@ Overall layout shld look like a game console or arcade machine. Color palette mi
 
 ### Gameplay ideas
 
-** Main concept **
+**Main concept**
 
 (MVP)
 The player has to prevent block of texts moving from one side of the screen from reaching the other side. To prevent this, the player has to type in text with corresponds with the text inside the blocks.
 
-** Furthers **
-** Furthers **
-** Furthers **
-** Furthers **
-** Furthers **
-** Furthers **
-** Furthers **
-** Furthers **
-** Furthers **
-** Furthers **
+**Furthers**
+**Furthers**
+**Furthers**
+**Furthers**
+**Furthers**
+**Furthers**
+**Furthers**
+**Furthers**
+**Furthers**
+**Furthers**
 
-** WIREFRAMING **
+**WIREFRAMING**
