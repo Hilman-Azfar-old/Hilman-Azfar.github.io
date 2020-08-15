@@ -1,0 +1,79 @@
+html{
+	height: 100%;
+}
+
+body{
+	height: 100%;
+	margin: 0;
+	padding: 20px 15%;
+	font-size: 100%;
+	box-sizing: border-box;
+	background-color: mintcream;
+	font-family: Arial, san-serif;
+}
+
+div{
+	height: 15%;
+	margin: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: mistyrose;
+}
+
+.display-ctn{
+	height: 50%;
+	padding: 0;
+	display: flex;
+	background-color: white;
+	justify-content: space-between;
+}
+
+.display-ctn>*{
+	margin: 0;
+}
+
+.display-game{
+	height: 100%;
+	display: inline-flex;
+	flex-grow: 3;
+	margin-right: 2%;
+}
+
+.display-side-bar{
+	height: 100%;
+	display: inline-flex;
+	flex-grow: 1;
+}
+
+.input-panel{
+	width: max-content;
+	margin: 0 auto;
+	padding: 20px 240px;
+	position: relative;
+	border-radius: 10px;
+}
+
+.input-panel #user-input{
+	width: 7em;
+	padding: 0.3em;
+	font-size: 2.5em;
+}
+
+.input-panel #start{
+	right: 4%;
+	padding: 0.5em;
+	position: absolute;
+	font-size: 1.75em;
+}
+
+
+
+
+
+
+
+
+
+
+/*need space*/
