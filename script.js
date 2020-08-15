@@ -1,12 +1,16 @@
 console.log('Loading script...');
 
 //////
+//// HARD CODED GAME SETTINGS
+
 // game over array size (non-inclusive)
 let limit = 5;
 
 // refresh every ms
-let refreshMS = 1000;
+let refreshMS = 2000;
 
+// timer win condition
+let timer = 10000; //10 sec
 //////
 
 // STATE MANAGER
@@ -123,8 +127,6 @@ let showActive = () => {
     for (var i = 0; i < activeBox.length; i++) {
         display.appendChild(activeBox[i].box);
     }
-    console.log(activeBox,"--- showActive")
-
 }
 
 // show game state in the side bar
@@ -148,6 +150,7 @@ let gameLoop;
 
 let startGameLoop = () => {
     gameLoop = setInterval(()=>{updateGame();}, refreshMS);
+    gameTimer = setTimeout(()=>{checkGameWin();}, timer)
     console.log("--- startGameLoop")
 }
 
@@ -166,6 +169,19 @@ let checkGameOver = () => {
     }
 }
 
+//check win condition
+let checkGameWin = () => {
+    // as long you have not lost, you win
+    if (game !== 'over') {
+        game = 'win';
+        console.log(game,'--- checkGameWin')
+        handleGameWin();
+        return true
+    } else {
+        return false
+    }
+}
+
 // rest data and display to default values
 let reset = () => {
     resetDisplay();
@@ -177,18 +193,26 @@ let reset = () => {
 // double check logic when to check for endgame
 let updateGame = () => {
     updateBox(textArr);
+    showSideBar();
+    showActive();
     if (checkGameOver()){
-        endGameLoop();
-        gameOver();
-        reset();
-    } else {
-        showSideBar();
-        showActive();
+        handleGameEnd();
     }
+
     console.log(game,"--- updateGame")
 }
 
+let handleGameEnd = () => {
+    clearTimeout(gameTimer);
+    endGameLoop();
+    gameOver();
+    reset();
+}
 
+let handleGameWin = () => {
+    endGameLoop();
+    reset();
+}
 
 
 
