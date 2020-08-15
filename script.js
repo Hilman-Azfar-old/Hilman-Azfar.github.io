@@ -18,17 +18,16 @@ let game = 'idle';
 // gameStart should not do anything if there is an ongoing game
 let gameStart = () => {
     if (game !== start){
-        game = 'start'
+        game = 'start';
         startGameLoop();
         console.log(game,"--- gameStart")
     }
 }
 // over -- end all operations and reset to default and set back to
 let gameOver = () => {
-    game = 'over'
+    game = 'over';
     console.log(game,"--- gameOver")
 }
-
 
 
 // DATA HANDLING -- checks for changes in data
@@ -87,6 +86,15 @@ let deleteBox = (arr, word) => {
     }
 }
 
+
+// reset data to default
+let resetData = () => {
+    activeBox = [];
+}
+
+
+
+
 // USER HANDLING
 // during game start
 // record the user input only onchange and compare to the exist
@@ -107,17 +115,31 @@ let handleChange = (event) => {
 
 
 // DISPLAY HANDLING -- updates to show things
-let display = document.querySelector('.display-game');
 
 // show all active box in display game div starting with the oldest
+let display = document.querySelector('.display-game');
 let showActive = () => {
-    display.innerHTML = null;
+    display.innerHTML = '';
     for (var i = 0; i < activeBox.length; i++) {
         display.appendChild(activeBox[i].box);
     }
     console.log(activeBox,"--- showActive")
 
 }
+
+// show game state in the side bar
+let sideBar = document.querySelector('.display-side-bar');
+let showSideBar = () => {
+    sideBar.innerText = game;
+}
+
+
+// change the displays to the default
+let resetDisplay = () => {
+    display.innerText = 'DISPLAY'
+    sideBar.innerText = game;
+}
+
 
 
 // GAME LOOP -- updates game every 5 seconds
@@ -144,6 +166,13 @@ let checkGameOver = () => {
     }
 }
 
+// rest data and display to default values
+let reset = () => {
+    resetDisplay();
+    resetData();
+    game = 'idle';
+}
+
 // update all check data first then end/win condition then gamestate then display
 // double check logic when to check for endgame
 let updateGame = () => {
@@ -151,7 +180,9 @@ let updateGame = () => {
     if (checkGameOver()){
         endGameLoop();
         gameOver();
+        reset();
     } else {
+        showSideBar();
         showActive();
     }
     console.log(game,"--- updateGame")
