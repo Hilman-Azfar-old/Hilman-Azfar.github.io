@@ -2,10 +2,10 @@ console.log('Loading script...');
 
 //////
 // game over array size (non-inclusive)
-let limit = 4;
+let limit = 5;
 
 // refresh every ms
-let refreshMS = 3000;
+let refreshMS = 1000;
 
 //////
 
@@ -34,7 +34,7 @@ let gameOver = () => {
 // DATA HANDLING -- checks for changes in data
 
 // create new boxes with random text
-let textArr = ['a', 'b'];
+let textArr = ['text', 'abc', 'try', 'people'];
 
 let randomText = (arr) => {
     var index  = Math.floor(Math.random() * arr.length)
@@ -95,6 +95,8 @@ let handleChange = (event) => {
     if (game === 'start') {
         currentInput = event.target.value;
         deleteBox(activeBox, currentInput)
+        // force the new display
+        showActive()
     } else {
         alert('Start the damn game!')
     }
