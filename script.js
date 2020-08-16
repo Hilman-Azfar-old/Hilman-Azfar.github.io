@@ -53,11 +53,10 @@ let reset = () => {
 
 // DATA HANDLING -- checks for changes in data
 
-let textArr = ['toy', 'abc', 'try', 'get'];
 
-let stageText = [['stage1','stage1','stage1'],
-                 ['stage2','stage2','stage2'],
-                 ['black','stage3','stage3'],]
+let stageText = [['1','1','1'],
+                 ['2','2','2'],
+                 ['black','3','3'],]
 
 let color = ['green', 'blue', 'red']
 
@@ -141,28 +140,11 @@ let deleteBox = (arr, word) => {
     }
 }
 
-// let deleteBlackBox = () => {
-//     //check for first occurance and delete it
-//     let index = -1
-//     for (var i = 0; i < arr.length; i++) {
-//         console.log(arr[i].word, word,'--- deleteBox')
-//         if (arr[i].word === 'black'){
-//             index = i;
-//             break
-//         }
-//     }
-//     //if only word exists
-//     if (index > -1) {
-//         arr = arr.splice(index, 1)
-//         lastDelete = word;
-//         addScore();
-//         console.log("Deleted ---",word,"--- deleteBox")
-//         return true
-//     } else {
-//         console.log(word + '.not found! --- deleteBox')
-//         return false
-//     }
-// }
+let deleteBlackBox = () => {
+    if (activeBox[0].word === 'black'){
+        activeBox.shift();
+    }
+}
 
 
 // after deletion increment score
@@ -170,6 +152,7 @@ let score = 0;
 
 let addScore = () => {
     score++;
+    handleStageTimer();
 }
 
 
@@ -195,7 +178,7 @@ userInputText.addEventListener('input',(event)=>{handleInput(event)});
 
 let currentInput;
 let handleSpaceDown = (event) => {
-    if (game === 'start' && event.key === " ") {
+    if (game === 'start' && (event.key === " " || event.key === "Enter")) {
         currentInput = event.target.value;
         event.target.value = '';
         deleteBox(activeBox, currentInput)
@@ -257,7 +240,7 @@ let resetDisplay = () => {
 ///// ALL LOOPS /////
 let startAllLoops = () => {
     startStageLoop();
-    startStageTimer();
+//    startStageTimer();
     startGameLoop();
 }
 
@@ -289,23 +272,24 @@ let updateData = () => {
 }
 
 // progress stages till stage complete
-let startStageTimer = () => {
-    stageTimer = setTimeout(()=>{handleStageTimer();}, nextStageTime)
-    console.log('---startStageTimer')
-}
+// let startStageTimer = () => {
+//     stageTimer = setTimeout(()=>{handleStageTimer();}, nextStageTime)
+//     console.log('---startStageTimer')
+// }
 
 let handleStageTimer = () => {
-    stage++;
-    switch(stage){
-        case 2:
+    switch(score){
+        case 10:
+            stage = 2;
             console.log(stage,'---handleStageTimer')
-            startStageTimer();
+//            startStageTimer();
             break;
-        case 3:
+        case 15:
+            stage = 3;
             console.log(stage,'---handleStageTimer')
-            startStageTimer();
+//            startStageTimer();
             break;
-        case 4:
+        case 20:
             game = 'win'
             handleGameWon();
             console.log('won ---handleStageTimer')
@@ -313,9 +297,9 @@ let handleStageTimer = () => {
     }
 }
 
-let endStageTimer = () => {
-    clearTimeout(stageTimer);
-}
+//let endStageTimer = () => {
+//    clearTimeout(stageTimer);
+//}
 
 
 
@@ -340,7 +324,7 @@ let endGameLoop = () => {
 // check active length equals limit
 let isGameOver = () => {
     if (activeBox.length === limit){
-    //    deleteBlackBox();
+        deleteBlackBox();
         if (activeBox.length === limit){
             console.log("--- isGameOver")
             return true
@@ -383,7 +367,7 @@ let updateDisplay = () => {
 
 let handleGameEnd = () => {
     clearTimeout(gameTimer);
-    endStageTimer();
+//    endStageTimer();
     endAllLoops();
     gameOver();
 }
