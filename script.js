@@ -9,8 +9,8 @@ let limit = 5;
 // refresh every ms
 let refreshMS = 1500;
 
-// timer win condition
-let timer = 20000; //10 sec
+// timer won condition
+let timer = 10000; //10 sec
 //////
 
 // STATE MANAGER
@@ -36,33 +36,34 @@ let gameOver = () => {
 
 // DATA HANDLING -- checks for changes in data
 
-// create new boxes with random text
 let textArr = ['text', 'abc', 'try', 'people'];
 
-let randomText = (arr) => {
-    var index  = Math.floor(Math.random() * arr.length)
-    return arr[index];
+
+
+class box {
+    // arr can be changed to use any data set
+    constructor(arr){
+        var newBox = document.createElement('div');
+        var insideText = document.createElement('p')
+        var word = this.randomText(arr)
+        insideText.innerText = word;
+        newBox.appendChild(insideText);
+        this.word = word;
+        this.box = newBox;
+    }
+    // create new boxes with random text
+    randomText (arr) {
+        var index  = Math.floor(Math.random() * arr.length)
+        return arr[index];
+    }
 }
 
-// textArr can be changed to use any data set
-let createBox = (arr) => {
-    var newBox = document.createElement('div');
-    var insideText = document.createElement('p')
-    var word = randomText(arr)
-    insideText.innerText = word;
-
-    newBox.appendChild(insideText);
-    var boxObj = {}
-    boxObj['word'] = word;
-    boxObj['box'] = newBox;
-    return boxObj;
-}
 
 // add box to active every gameloop
 let activeBox = [];
 
 let updateBox = (arr) => {
-    var newBox = createBox(arr);
+    var newBox = new box(arr);
     activeBox.push(newBox)
 }
 
@@ -74,8 +75,9 @@ let lastDelete = '';
 let deleteBox = (arr, word) => {
     //check for first occurance and delete it
 
-    let index = -1;
+    let index = -1
     for (var i = 0; i < arr.length; i++) {
+        console.log(arr[i].word, word,'--- deleteBox')
         if (arr[i].word === word){
             index = i;
             break
@@ -86,10 +88,10 @@ let deleteBox = (arr, word) => {
         arr = arr.splice(index, 1)
         lastDelete = word;
         addScore();
-        console.log(word,"--- deleteBox")
+        console.log("Deleted ---",word,"--- deleteBox")
         return true
     } else {
-        console.log('not found! --- deleteBox')
+        console.log(word + '.not found! --- deleteBox')
         return false
     }
 }
@@ -114,20 +116,29 @@ let resetData = () => {
 // USER HANDLING
 // during game start
 // record the user input only onchange and compare to the exist
+
+let userInputText = document.querySelector('#user-input');
+
+userInputText.addEventListener('keydown',(event)=>{handleSpaceDown(event)});
+userInputText.addEventListener('keyup',(event)=>{handleSpaceUp(event)});
+
+
 let currentInput;
-let handleChange = (event) => {
-    if (game === 'start') {
+let handleSpaceDown = (event) => {
+    if (game === 'start' && event.key === " ") {
         currentInput = event.target.value;
         deleteBox(activeBox, currentInput)
         // force the new display
         showActive()
         showSideBar()
-    } else {
-        alert("Click 'start' to play!")
     }
-    event.target.value = '';
 }
 
+let handleSpaceUp = (event) => {
+    if (event.key === " "){
+        event.target.value = '';
+    }
+}
 
 
 
@@ -137,7 +148,6 @@ let handleChange = (event) => {
 let display = document.querySelector('.display-game');
 let showActive = () => {
     display.innerHTML = '';
-    console.log(activeBox)
     for (var i = activeBox.length - 1; i > -1 ; i--) {
         display.appendChild(activeBox[i].box);
     }
@@ -173,7 +183,7 @@ let gameLoop;
 
 let startGameLoop = () => {
     gameLoop = setInterval(()=>{updateGame();}, refreshMS);
-    gameTimer = setTimeout(()=>{checkGameWin();}, timer)
+    gameTimer = setTimeout(()=>{isGameWon();}, timer)
     console.log("--- startGameLoop")
 }
 
@@ -183,22 +193,22 @@ let endGameLoop = () => {
 }
 
 // check active length equals limit
-let checkGameOver = () => {
+let isGameOver = () => {
     if (activeBox.length === limit){
-        console.log("--- checkGameOver")
+        console.log("--- isGameOver")
         return true
     } else {
         return false
     }
 }
 
-//check win condition
-let checkGameWin = () => {
-    // as long you have not lost, you win
+//check won condition
+let isGameWon = () => {
+    // as long you have not lost, you won
     if (game !== 'over') {
-        game = 'win';
-        console.log(game,'--- checkGameWin')
-        handleGameWin();
+        game = 'won';
+        console.log(game,'--- isGameWon')
+        handleGameWon();
         return true
     } else {
         return false
@@ -212,13 +222,13 @@ let reset = () => {
     game = 'idle';
 }
 
-// update all check data first then end/win condition then gamestate then display
+// update all check data first then end/won condition then gamestate then display
 // double check logic when to check for endgame
 let updateGame = () => {
     updateBox(textArr);
     showSideBar();
     showActive();
-    if (checkGameOver()){
+    if (isGameOver()){
         handleGameEnd();
     }
 
@@ -232,7 +242,7 @@ let handleGameEnd = () => {
     reset();
 }
 
-let handleGameWin = () => {
+let handleGameWon = () => {
     endGameLoop();
     reset();
 }
