@@ -39,7 +39,7 @@ let gameStart = () => {
 // over -- end all operations and reset to default and set back to
 let gameOver = () => {
     game = 'over';
-    console.log(game,"--- gameOver")
+    console.log("--- gameOver")
 }
 
 // rest data and display to default values
@@ -185,7 +185,7 @@ let handleSpaceDown = (event) => {
         // force the new display
         showActive()
         showSideBar()
-    } else if (game !== 'start' && event.key === " ") {
+    } else if (game !== 'start' && (event.key === " " || event.key === "Enter")) {
         event.target.value = '';
     }
 }
@@ -279,12 +279,12 @@ let updateData = () => {
 
 let handleStageTimer = () => {
     switch(score){
-        case 10:
+        case 5:
             stage = 2;
             console.log(stage,'---handleStageTimer')
 //            startStageTimer();
             break;
-        case 15:
+        case 10:
             stage = 3;
             console.log(stage,'---handleStageTimer')
 //            startStageTimer();
@@ -370,6 +370,8 @@ let handleGameEnd = () => {
 //    endStageTimer();
     endAllLoops();
     gameOver();
+    showSideBar();
+    console.log("--- handleGameEnd")
 }
 
 
