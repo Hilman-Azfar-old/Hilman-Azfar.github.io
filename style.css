@@ -22,11 +22,12 @@ div{
 }
 
 .display-ctn{
-	height: 50%;
+	height: 60vh;
 	padding: 0;
 	display: flex;
 	background-color: white;
 	justify-content: space-between;
+
 }
 
 .display-ctn>*{

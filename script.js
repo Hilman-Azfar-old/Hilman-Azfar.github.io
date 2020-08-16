@@ -6,11 +6,17 @@ console.log('Loading script...');
 // game over array size (non-inclusive)
 let limit = 5;
 
-// refresh every ms
-let refreshMS = 1200;
+// refresh every ms data
+let refreshMS = 2000;
+
+// frames per second
+let FPS = 1000 / 60;
 
 // timer won condition
 let timer = 10000; //10 sec
+
+// time to next stage
+let nextStageTime = 4000;
 //////
 
 // STATE MANAGER
@@ -21,9 +27,11 @@ let game = 'idle';
 // start -- when start button is clicked, begin game loop
 // gameStart should not do anything if there is an ongoing game
 let gameStart = () => {
-    if (game !== start){
+    if (game === 'idle'){
         game = 'start';
-        startGameLoop();
+        resetInput();
+        showSideBar();
+        startAllLoops();
         userInputText.focus();
         console.log(game,"--- gameStart")
     }
@@ -34,10 +42,22 @@ let gameOver = () => {
     console.log(game,"--- gameOver")
 }
 
+// rest data and display to default values
+let reset = () => {
+    resetDisplay();
+    resetData();
+    resetInput();
+    game = 'idle';
+}
+
 
 // DATA HANDLING -- checks for changes in data
 
 let textArr = ['toy', 'abc', 'try', 'get'];
+
+let stageText = [['stage1','stage1','stage1'],
+                 ['stage2','stage2','stage2'],
+                 ['stage3','stage3','stage3'],]
 
 
 
@@ -109,6 +129,7 @@ let addScore = () => {
 let resetData = () => {
     activeBox = [];
     score = 0;
+    lastDelete = '';
 }
 
 
@@ -144,6 +165,9 @@ let handleInput = (event) => {
     }
 }
 
+let resetInput = () => {
+    userInputText.value = '';
+}
 
 
 
@@ -180,15 +204,81 @@ let resetDisplay = () => {
 
 
 
+///// ALL LOOPS /////
+let startAllLoops = () => {
+    startStageLoop();
+    startStageTimer();
+    startGameLoop();
+}
+
+let endAllLoops = () => {
+    endStageLoop();
+    endGameLoop();
+}
 
 
-// GAME LOOP -- updates game every 5 seconds
+// Data loops + stage tracker
+let stage = 1;
+let stageLoop;
+let stageTimer;
+
+
+let startStageLoop = () => {
+    stageLoop = setInterval(()=>{updateData();},refreshMS)
+    console.log('--- startStageLoop')
+}
+
+
+let endStageLoop = () => {
+    clearInterval(stageLoop);
+    console.log('--- endStageLoop')
+}
+
+let updateData = () => {
+    updateBox(stageText[stage-1 ]);
+}
+
+// progress stages till stage complet
+let startStageTimer = () => {
+    stageTimer = setTimeout(()=>{handleStageTimer();}, nextStageTime)
+    console.log('---startStageTimer')
+}
+
+let handleStageTimer = () => {
+    stage++;
+    switch(stage){
+        case 2:
+            console.log(stage,'---handleStageTimer')
+            startStageTimer();
+            break;
+        case 3:
+            console.log(stage,'---handleStageTimer')
+            startStageTimer();
+            break;
+        case 4:
+            stage=1;
+            handleGameWon();
+            console.log('---handleStageTimer')
+            break;
+    }
+}
+
+let endStageTimer = () => {
+    clearTimeout(stageTimer);
+}
+
+
+
+
+
+// GAME LOOP --
 // check for changes in display, data and game state
 let gameLoop;
+let gameTimer;
 
 let startGameLoop = () => {
-    gameLoop = setInterval(()=>{updateGame();}, refreshMS);
-    gameTimer = setTimeout(()=>{isGameWon();}, timer)
+    gameLoop = setInterval(()=>{updateDisplay();}, FPS);
+    //gameTimer = setTimeout(()=> {isGameWon();}, timer)
     console.log("--- startGameLoop")
 }
 
@@ -220,37 +310,34 @@ let isGameWon = () => {
     }
 }
 
-// rest data and display to default values
-let reset = () => {
-    resetDisplay();
-    resetData();
-    game = 'idle';
+let handleGameWon = () => {
+    endAllLoops();
+    reset();
 }
 
-// update all check data first then end/won condition then gamestate then display
+// update game shld only check for win loss conditions not data handling
+
 // double check logic when to check for endgame
-let updateGame = () => {
-    updateBox(textArr);
-    showSideBar();
+let updateDisplay = () => {
+    //showSideBar();
     showActive();
     if (isGameOver()){
         handleGameEnd();
     }
-
-    console.log(game,"--- updateGame")
+    //console.log(game,"--- updateDisplay")
 }
 
 let handleGameEnd = () => {
     clearTimeout(gameTimer);
-    endGameLoop();
+    endStageTimer();
+    endAllLoops();
     gameOver();
     reset();
 }
 
-let handleGameWon = () => {
-    endGameLoop();
-    reset();
-}
+
+
+
 
 
 
