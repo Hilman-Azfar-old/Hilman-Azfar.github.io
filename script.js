@@ -16,20 +16,20 @@ let FPS = 1000 / 60;
 let timer = 10000; //10 sec
 
 // time to next stage
-let nextStageTime = 4000;
+let nextStageTime = 8000;
 //////
 
 // STATE MANAGER
 
 // idle -- default waiting for user to start
-let game = 'idle';
+let game = 'over';
 
 // start -- when start button is clicked, begin game loop
 // gameStart should not do anything if there is an ongoing game
 let gameStart = () => {
-    if (game === 'idle'){
+    if (game === 'over' || game === 'win'){
         game = 'start';
-        resetInput();
+        reset();
         showSideBar();
         startAllLoops();
         userInputText.focus();
@@ -47,7 +47,6 @@ let reset = () => {
     resetDisplay();
     resetData();
     resetInput();
-    game = 'idle';
     stage = 1;
 }
 
@@ -58,7 +57,7 @@ let textArr = ['toy', 'abc', 'try', 'get'];
 
 let stageText = [['stage1','stage1','stage1'],
                  ['stage2','stage2','stage2'],
-                 ['stage3','stage3','stage3'],]
+                 ['black','stage3','stage3'],]
 
 let color = ['green', 'blue', 'red']
 
@@ -118,11 +117,13 @@ let lastDelete = '';
 
 let deleteBox = (arr, word) => {
     //check for first occurance and delete it
-
     let index = -1
     for (var i = 0; i < arr.length; i++) {
         console.log(arr[i].word, word,'--- deleteBox')
         if (arr[i].word === word){
+            if (word === 'black') {
+                handleGameEnd();
+            }
             index = i;
             break
         }
@@ -139,6 +140,30 @@ let deleteBox = (arr, word) => {
         return false
     }
 }
+
+// let deleteBlackBox = () => {
+//     //check for first occurance and delete it
+//     let index = -1
+//     for (var i = 0; i < arr.length; i++) {
+//         console.log(arr[i].word, word,'--- deleteBox')
+//         if (arr[i].word === 'black'){
+//             index = i;
+//             break
+//         }
+//     }
+//     //if only word exists
+//     if (index > -1) {
+//         arr = arr.splice(index, 1)
+//         lastDelete = word;
+//         addScore();
+//         console.log("Deleted ---",word,"--- deleteBox")
+//         return true
+//     } else {
+//         console.log(word + '.not found! --- deleteBox')
+//         return false
+//     }
+// }
+
 
 // after deletion increment score
 let score = 0;
@@ -281,7 +306,6 @@ let handleStageTimer = () => {
             startStageTimer();
             break;
         case 4:
-            stage=1;
             game = 'win'
             handleGameWon();
             console.log('won ---handleStageTimer')
@@ -316,8 +340,11 @@ let endGameLoop = () => {
 // check active length equals limit
 let isGameOver = () => {
     if (activeBox.length === limit){
-        console.log("--- isGameOver")
-        return true
+    //    deleteBlackBox();
+        if (activeBox.length === limit){
+            console.log("--- isGameOver")
+            return true
+        }
     } else {
         return false
     }
@@ -340,7 +367,6 @@ let handleGameWon = () => {
     endAllLoops();
     console.log(game)
     showSideBar()
-    reset();
 }
 
 // update game shld only check for win loss conditions not data handling
@@ -360,7 +386,6 @@ let handleGameEnd = () => {
     endStageTimer();
     endAllLoops();
     gameOver();
-    reset();
 }
 
 
