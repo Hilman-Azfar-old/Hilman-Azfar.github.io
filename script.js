@@ -7,7 +7,7 @@ console.log('Loading script...');
 let limit = 5;
 
 // refresh every ms
-let refreshMS = 1500;
+let refreshMS = 1200;
 
 // timer won condition
 let timer = 10000; //10 sec
@@ -24,6 +24,7 @@ let gameStart = () => {
     if (game !== start){
         game = 'start';
         startGameLoop();
+        userInputText.focus();
         console.log(game,"--- gameStart")
     }
 }
@@ -36,7 +37,7 @@ let gameOver = () => {
 
 // DATA HANDLING -- checks for changes in data
 
-let textArr = ['text', 'abc', 'try', 'people'];
+let textArr = ['toy', 'abc', 'try', 'get'];
 
 
 
@@ -119,26 +120,30 @@ let resetData = () => {
 
 let userInputText = document.querySelector('#user-input');
 
-userInputText.addEventListener('keydown',(event)=>{handleSpaceDown(event)});
-userInputText.addEventListener('keyup',(event)=>{handleSpaceUp(event)});
+userInputText.addEventListener('keypress',(event)=>{handleSpaceDown(event)});
+userInputText.addEventListener('input',(event)=>{handleInput(event)});
 
 
 let currentInput;
 let handleSpaceDown = (event) => {
     if (game === 'start' && event.key === " ") {
         currentInput = event.target.value;
+        event.target.value = '';
         deleteBox(activeBox, currentInput)
         // force the new display
         showActive()
         showSideBar()
-    }
-}
-
-let handleSpaceUp = (event) => {
-    if (event.key === " "){
+    } else if (game !== 'start' && event.key === " ") {
         event.target.value = '';
     }
 }
+
+let handleInput = (event) => {
+    if (event.target.value === " "){
+        event.target.value = '';
+    }
+}
+
 
 
 
