@@ -56,7 +56,7 @@ let reset = () => {
 
 let stageText = [['get','it','right'],
                  ['red','blue','green'],
-                 ['black','truman','jerome'],]
+                 ['trap','truman','jerome'],]
 
 let color = ['green', 'blue', 'red']
 
@@ -120,7 +120,7 @@ let deleteBox = (arr, word) => {
     for (var i = 0; i < arr.length; i++) {
         console.log(arr[i].word, word,'--- deleteBox')
         if (arr[i].word === word){
-            if (word === 'black') {
+            if (word === 'trap') {
                 handleGameEnd();
             }
             index = i;
@@ -138,13 +138,13 @@ let deleteBox = (arr, word) => {
         console.log("Deleted ---",word,"--- deleteBox")
         return true
     } else {
-        console.log(word + '.not found! --- deleteBox')
+        console.log(word + 'not found! --- deleteBox')
         return false
     }
 }
 
-let deleteBlackBox = () => {
-    if (activeBox[0].word === 'black'){
+let deleteTrapBox = () => {
+    if (activeBox[0].word === 'trap'){
         activeBox.shift();
     }
 }
@@ -175,13 +175,16 @@ let updateCombo = () => {
     comboLength = activeCombo.length;
     if ( comboLength === 0 && lastDelete === combo[0]){
         activeCombo[0] = lastDelete;
+        return
     } else if ( comboLength === 1 && lastDelete === combo[1]){
         activeCombo[1] = lastDelete;
+        return
     } else if ( comboLength === 2 && lastDelete === combo[2]){
         activeCombo = [];
         console.log('combo successful! --- isCombo')
         return true
     }
+    activeCombo = [];
     return false
 }
 
@@ -239,12 +242,22 @@ let gameHeading = document.querySelector('.game-state>p');
 let stageHeading = document.querySelector('.game-stage>p');
 let scoreHeading = document.querySelector('.score>p');
 let lastDelHeading = document.querySelector('.last-delete>p');
+let comboHeading = document.querySelector('.combo>p');
 
 let showSideBar = () => {
+
+    var comboHeadingText = () => {
+        var concat = '';
+        for (var i = 0; i < activeCombo.length; i++) {
+            concat = concat + ' ' + activeCombo[i];
+        }
+        return concat
+    }
     gameHeading.innerText = game;
     stageHeading.innerText = stage;
     scoreHeading.innerText = score;
     lastDelHeading.innerText = lastDelete;
+    comboHeading.innerText = comboHeadingText();
 }
 
 
@@ -298,22 +311,19 @@ let updateData = () => {
 // }
 
 let handleStageTimer = () => {
-    switch(score){
-        case 100:
-            stage = 2;
-            console.log(stage,'---handleStageTimer')
-//            startStageTimer();
-            break;
-        case 400:
-            stage = 3;
-            console.log(stage,'---handleStageTimer')
-//            startStageTimer();
-            break;
-        case 600:
-            game = 'win'
-            handleGameWon();
-            console.log('won ---handleStageTimer')
-            break;
+
+    if (score > 400){
+        game = 'win'
+        handleGameWon();
+        console.log('won ---handleStageTimer')
+    } else if (score > 350){
+        stage = 3;
+        console.log(stage,'---handleStageTimer')
+//      startStageTimer();
+    } else if (score > 200){
+        stage = 2;
+        console.log(stage,'---handleStageTimer')
+//      startStageTimer();
     }
 }
 
@@ -344,7 +354,7 @@ let endGameLoop = () => {
 // check active length equals limit
 let isGameOver = () => {
     if (activeBox.length === limit){
-        deleteBlackBox();
+        deleteTrapBox();
         if (activeBox.length === limit){
             console.log("--- isGameOver")
             return true
