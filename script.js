@@ -7,7 +7,7 @@ console.log('Loading script...');
 let limit = 5;
 
 // refresh every ms data
-let refreshMS = 2000;
+let refreshMS = 1700;
 
 // frames per second
 let FPS = 1000 / 60;
@@ -55,8 +55,8 @@ let reset = () => {
 
 
 let stageText = [['get','it','right'],
-                 ['2','2','2'],
-                 ['black','3','3'],]
+                 ['red','blue','green'],
+                 ['black','truman','jerome'],]
 
 let color = ['green', 'blue', 'red']
 
