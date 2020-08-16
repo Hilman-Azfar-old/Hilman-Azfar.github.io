@@ -54,7 +54,7 @@ let reset = () => {
 // DATA HANDLING -- checks for changes in data
 
 
-let stageText = [['1','1','1'],
+let stageText = [['get','it','right'],
                  ['2','2','2'],
                  ['black','3','3'],]
 
@@ -131,7 +131,10 @@ let deleteBox = (arr, word) => {
     if (index > -1) {
         arr = arr.splice(index, 1)
         lastDelete = word;
-        addScore();
+        if (updateCombo()){
+            addScore(100);
+        }
+        addScore(10);
         console.log("Deleted ---",word,"--- deleteBox")
         return true
     } else {
@@ -150,8 +153,8 @@ let deleteBlackBox = () => {
 // after deletion increment score
 let score = 0;
 
-let addScore = () => {
-    score++;
+let addScore = (num) => {
+    score += num;
     handleStageTimer();
 }
 
@@ -163,7 +166,24 @@ let resetData = () => {
     lastDelete = '';
 }
 
+// combo will be an array of deleted word in specific order
 
+const combo = ['get','it','right'];
+let activeCombo = [];
+
+let updateCombo = () => {
+    comboLength = activeCombo.length;
+    if ( comboLength === 0 && lastDelete === combo[0]){
+        activeCombo[0] = lastDelete;
+    } else if ( comboLength === 1 && lastDelete === combo[1]){
+        activeCombo[1] = lastDelete;
+    } else if ( comboLength === 2 && lastDelete === combo[2]){
+        activeCombo = [];
+        console.log('combo successful! --- isCombo')
+        return true
+    }
+    return false
+}
 
 
 // USER HANDLING
@@ -279,17 +299,17 @@ let updateData = () => {
 
 let handleStageTimer = () => {
     switch(score){
-        case 5:
+        case 100:
             stage = 2;
             console.log(stage,'---handleStageTimer')
 //            startStageTimer();
             break;
-        case 10:
+        case 400:
             stage = 3;
             console.log(stage,'---handleStageTimer')
 //            startStageTimer();
             break;
-        case 20:
+        case 600:
             game = 'win'
             handleGameWon();
             console.log('won ---handleStageTimer')
