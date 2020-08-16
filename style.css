@@ -35,15 +35,29 @@ div{
 
 .display-game{
 	height: 100%;
+	margin-right: 2%;
 	display: inline-flex;
 	flex-grow: 3;
-	margin-right: 2%;
+	flex-direction: column;
+	justify-content: flex-start;
 }
 
 .display-side-bar{
 	height: 100%;
 	display: inline-flex;
 	flex-grow: 1;
+	flex-direction: column;
+	justify-content: flex-start;
+}
+
+.display-side-bar-item{
+	flex-direction: column;
+	justify-content: flex-start;
+	height: 4em;
+}
+
+.display-side-bar-item > *{
+	margin: 0.5em;
 }
 
 .input-panel{

@@ -7,10 +7,10 @@ console.log('Loading script...');
 let limit = 5;
 
 // refresh every ms
-let refreshMS = 2000;
+let refreshMS = 1500;
 
 // timer win condition
-let timer = 10000; //10 sec
+let timer = 20000; //10 sec
 //////
 
 // STATE MANAGER
@@ -69,6 +69,8 @@ let updateBox = (arr) => {
 // NOTE: expensive to look up and delete in array
 // consider hashmap with linked lists
 // returns true if deleted false if not found indicating invalid input
+let lastDelete = '';
+
 let deleteBox = (arr, word) => {
     //check for first occurance and delete it
 
@@ -82,6 +84,8 @@ let deleteBox = (arr, word) => {
     //if only word exists
     if (index > -1) {
         arr = arr.splice(index, 1)
+        lastDelete = word;
+        addScore();
         console.log(word,"--- deleteBox")
         return true
     } else {
@@ -90,10 +94,18 @@ let deleteBox = (arr, word) => {
     }
 }
 
+// after deletion increment score
+let score = 0;
+
+let addScore = () => {
+    score++;
+}
+
 
 // reset data to default
 let resetData = () => {
     activeBox = [];
+    score = 0;
 }
 
 
@@ -109,6 +121,7 @@ let handleChange = (event) => {
         deleteBox(activeBox, currentInput)
         // force the new display
         showActive()
+        showSideBar()
     } else {
         alert("Click 'start' to play!")
     }
@@ -124,23 +137,33 @@ let handleChange = (event) => {
 let display = document.querySelector('.display-game');
 let showActive = () => {
     display.innerHTML = '';
-    for (var i = 0; i < activeBox.length; i++) {
+    console.log(activeBox)
+    for (var i = activeBox.length - 1; i > -1 ; i--) {
         display.appendChild(activeBox[i].box);
     }
 }
 
 // show game state in the side bar
-let sideBar = document.querySelector('.display-side-bar');
+// show point system
+let gameHeading = document.querySelector('.game-state>p');
+let scoreHeading = document.querySelector('.score>p');
+let lastDelHeading = document.querySelector('.last-delete>p');
+
 let showSideBar = () => {
-    sideBar.innerText = game;
+    gameHeading.innerText = game;
+    scoreHeading.innerText = score;
+    lastDelHeading.innerText = lastDelete;
 }
 
 
 // change the displays to the default
 let resetDisplay = () => {
     display.innerText = 'DISPLAY'
-    sideBar.innerText = game;
+    gameHeading.innerText = game;
 }
+
+
+
 
 
 
