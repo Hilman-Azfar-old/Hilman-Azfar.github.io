@@ -48,6 +48,7 @@ let reset = () => {
     resetData();
     resetInput();
     game = 'idle';
+    stage = 1;
 }
 
 
@@ -59,7 +60,7 @@ let stageText = [['stage1','stage1','stage1'],
                  ['stage2','stage2','stage2'],
                  ['stage3','stage3','stage3'],]
 
-
+let color = ['green', 'blue', 'red']
 
 class box {
     // arr can be changed to use any data set
@@ -69,13 +70,31 @@ class box {
         var word = this.randomText(arr)
         insideText.innerText = word;
         newBox.appendChild(insideText);
-        this.word = word;
-        this.box = newBox;
-    }
+        switch(stage){
+            case 1:
+                this.word = word;
+                this.box = newBox;
+                break;
+            case 2:
+                var randColor = this.randomColor();
+                this.word = randColor;
+                newBox.style.backgroundColor = randColor;
+                this.box = newBox;
+                break;
+            case 3:
+                this.word = word;
+                this.box = newBox;
+        }
+}
     // create new boxes with random text
     randomText (arr) {
         var index  = Math.floor(Math.random() * arr.length)
         return arr[index];
+    }
+
+    randomColor () {
+        var index  = Math.floor(Math.random() * color.length)
+        return color[index];
     }
 }
 
@@ -83,9 +102,13 @@ class box {
 // add box to active every gameloop
 let activeBox = [];
 
+
+// add boxes according to stages
+//
 let updateBox = (arr) => {
-    var newBox = new box(arr);
+    var newBox = new box(arr[stage-1]);
     activeBox.push(newBox)
+    console.log(activeBox)
 }
 
 // NOTE: expensive to look up and delete in array
@@ -185,11 +208,13 @@ let showActive = () => {
 // show game state in the side bar
 // show point system
 let gameHeading = document.querySelector('.game-state>p');
+let stageHeading = document.querySelector('.game-stage>p');
 let scoreHeading = document.querySelector('.score>p');
 let lastDelHeading = document.querySelector('.last-delete>p');
 
 let showSideBar = () => {
     gameHeading.innerText = game;
+    stageHeading.innerText = stage;
     scoreHeading.innerText = score;
     lastDelHeading.innerText = lastDelete;
 }
@@ -235,10 +260,10 @@ let endStageLoop = () => {
 }
 
 let updateData = () => {
-    updateBox(stageText[stage-1 ]);
+    updateBox(stageText);
 }
 
-// progress stages till stage complet
+// progress stages till stage complete
 let startStageTimer = () => {
     stageTimer = setTimeout(()=>{handleStageTimer();}, nextStageTime)
     console.log('---startStageTimer')
@@ -257,8 +282,9 @@ let handleStageTimer = () => {
             break;
         case 4:
             stage=1;
+            game = 'win'
             handleGameWon();
-            console.log('---handleStageTimer')
+            console.log('won ---handleStageTimer')
             break;
     }
 }
@@ -312,6 +338,8 @@ let isGameWon = () => {
 
 let handleGameWon = () => {
     endAllLoops();
+    console.log(game)
+    showSideBar()
     reset();
 }
 
@@ -319,7 +347,7 @@ let handleGameWon = () => {
 
 // double check logic when to check for endgame
 let updateDisplay = () => {
-    //showSideBar();
+    showSideBar();
     showActive();
     if (isGameOver()){
         handleGameEnd();
