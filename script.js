@@ -17,6 +17,9 @@ let timer = 10000; //10 sec
 
 // time to next stage
 let nextStageTime = 8000;
+
+// secret word
+let endWord = 'trap';
 //////
 
 // STATE MANAGER
@@ -175,7 +178,6 @@ let updateBox = (arr) => {
     var newBox = new box(arr[stage-1]);
     newBox.showBox();
     activeBox.push(newBox)
-    console.log(activeBox)
 }
 
 // NOTE: expensive to look up and delete in array
@@ -220,6 +222,7 @@ let deleteBox = (arr, word) => {
 
 let deleteTrapBox = () => {
     if (activeBox[0].word === 'trap'){
+        display.removeChild(activeBox[0].box)
         activeBox.shift();
     }
 }
@@ -432,11 +435,19 @@ let updateDisplay = () => {
     //showActive();
 
     // go thru the array and update all the obj position
+    // check if box at end of screen
+    // if normal lose
+    // if trap delete
+    // not at end update
     let endScreen = 595;
 
     for (var i = 0; i < activeBox.length; i++) {
         activeBox[i].updatePosition();
-        if (activeBox[i].x > endScreen){
+        console.log('/// ping ///')
+        if (activeBox[i].x > endScreen && activeBox[i].word === endWord){
+            console.log('trap detected');
+            deleteTrapBox();
+        } else if (activeBox[i].x > endScreen){
             handleGameEnd();
             return;
         }
