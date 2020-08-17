@@ -4,13 +4,13 @@ console.log('Loading script...');
 //// HARD CODED GAME SETTINGS
 
 // game over array size (non-inclusive)
-let limit = 5;
+//let limit = 5;
 
 // refresh every ms data
-let refreshMS = 1700;
+let refreshMS = 900;
 
 // frames per second
-let FPS = 1000 / 30;
+let FPS = 1000 / 60;
 
 // timer won condition
 let timer = 10000; //10 sec
