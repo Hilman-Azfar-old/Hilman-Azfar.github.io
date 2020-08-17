@@ -70,7 +70,7 @@ div{
 .display-side-bar-item{
 	flex-direction: column;
 	justify-content: flex-start;
-	height: 60px;
+	height: 120px;
 }
 
 .display-side-bar-item > *{
