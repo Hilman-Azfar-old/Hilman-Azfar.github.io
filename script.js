@@ -10,7 +10,7 @@ let limit = 5;
 let refreshMS = 1700;
 
 // frames per second
-let FPS = 1000 / 60;
+let FPS = 1000 / 30;
 
 // timer won condition
 let timer = 10000; //10 sec
@@ -51,8 +51,47 @@ let reset = () => {
 }
 
 
-// DATA HANDLING -- checks for changes in data
 
+// USER HANDLING
+// during game start
+// record the user input only onchange and compare to the exist
+
+let userInputText = document.querySelector('#user-input');
+
+userInputText.addEventListener('keypress',(event)=>{handleSpaceDown(event)});
+userInputText.addEventListener('input',(event)=>{handleInput(event)});
+
+
+let currentInput;
+let handleSpaceDown = (event) => {
+    if (game === 'start' && (event.key === " " || event.key === "Enter")) {
+        currentInput = event.target.value;
+        event.target.value = '';
+        deleteBox(activeBox, currentInput)
+        // force the new display
+        //showActive()
+        showSideBar()
+    } else if (game !== 'start' && (event.key === " " || event.key === "Enter")) {
+        event.target.value = '';
+    }
+}
+
+let handleInput = (event) => {
+    if (event.target.value === " "){
+        event.target.value = '';
+    }
+}
+
+let resetInput = () => {
+    userInputText.value = '';
+}
+
+
+
+
+///
+// DATA HANDLING -- checks for changes in data
+///
 
 let stageText = [['get','it','right'],
                  ['red','blue','green'],
@@ -60,14 +99,28 @@ let stageText = [['get','it','right'],
 
 let color = ['green', 'blue', 'red']
 
+
+let display = document.querySelector('.display-game');
+
 class box {
     // arr can be changed to use any data set
     constructor(arr){
         var newBox = document.createElement('div');
+        newBox.classList.add('move');
         var insideText = document.createElement('p')
         var word = this.randomText(arr)
         insideText.innerText = word;
         newBox.appendChild(insideText);
+
+        // positioning
+        this.x = 0;
+        newBox.style.left = this.x + 'px';
+
+        let y = Math.floor(Math.random() * 350);
+        this.y = y;
+        newBox.style.top = y + 'px';
+        this.velocity = 2;
+
         switch(stage){
             case 1:
                 this.word = word;
@@ -83,7 +136,22 @@ class box {
                 this.word = word;
                 this.box = newBox;
         }
-}
+    }
+
+    // display
+    showBox () {
+        display.appendChild(this.box);
+    }
+
+
+    // update position
+    updatePosition () {
+        this.x = this.x + this.velocity
+        let newPos = this.x + 'px';
+
+        this.box.style.left = newPos;
+    }
+
     // create new boxes with random text
     randomText (arr) {
         var index  = Math.floor(Math.random() * arr.length)
@@ -105,6 +173,7 @@ let activeBox = [];
 //
 let updateBox = (arr) => {
     var newBox = new box(arr[stage-1]);
+    newBox.showBox();
     activeBox.push(newBox)
     console.log(activeBox)
 }
@@ -116,19 +185,25 @@ let lastDelete = '';
 
 let deleteBox = (arr, word) => {
     //check for first occurance and delete it
-    let index = -1
+    let index = -1;
+    let child = null;
     for (var i = 0; i < arr.length; i++) {
         console.log(arr[i].word, word,'--- deleteBox')
         if (arr[i].word === word){
             if (word === 'trap') {
                 handleGameEnd();
             }
+            child = arr[i].box;
             index = i;
             break
         }
     }
     //if only word exists
     if (index > -1) {
+        // remove from screen
+        display.removeChild(child);
+
+        // remove from array
         arr = arr.splice(index, 1)
         lastDelete = word;
         if (updateCombo()){
@@ -189,52 +264,17 @@ let updateCombo = () => {
 }
 
 
-// USER HANDLING
-// during game start
-// record the user input only onchange and compare to the exist
-
-let userInputText = document.querySelector('#user-input');
-
-userInputText.addEventListener('keypress',(event)=>{handleSpaceDown(event)});
-userInputText.addEventListener('input',(event)=>{handleInput(event)});
-
-
-let currentInput;
-let handleSpaceDown = (event) => {
-    if (game === 'start' && (event.key === " " || event.key === "Enter")) {
-        currentInput = event.target.value;
-        event.target.value = '';
-        deleteBox(activeBox, currentInput)
-        // force the new display
-        showActive()
-        showSideBar()
-    } else if (game !== 'start' && (event.key === " " || event.key === "Enter")) {
-        event.target.value = '';
-    }
-}
-
-let handleInput = (event) => {
-    if (event.target.value === " "){
-        event.target.value = '';
-    }
-}
-
-let resetInput = () => {
-    userInputText.value = '';
-}
-
-
 
 // DISPLAY HANDLING -- updates to show things
 
 // show all active box in display game div starting with the oldest
-let display = document.querySelector('.display-game');
-let showActive = () => {
-    display.innerHTML = '';
-    for (var i = activeBox.length - 1; i > -1 ; i--) {
-        display.appendChild(activeBox[i].box);
-    }
-}
+// let display = document.querySelector('.display-game');
+// let showActive = () => {
+//     display.innerHTML = '';
+//     for (var i = activeBox.length - 1; i > -1 ; i--) {
+//         display.appendChild(activeBox[i].box);
+//     }
+// }
 
 // show game state in the side bar
 // show point system
@@ -263,7 +303,7 @@ let showSideBar = () => {
 
 // change the displays to the default
 let resetDisplay = () => {
-    display.innerText = 'DISPLAY'
+    display.innerHTML = ''
     gameHeading.innerText = game;
 }
 
@@ -352,17 +392,17 @@ let endGameLoop = () => {
 }
 
 // check active length equals limit
-let isGameOver = () => {
-    if (activeBox.length === limit){
-        deleteTrapBox();
-        if (activeBox.length === limit){
-            console.log("--- isGameOver")
-            return true
-        }
-    } else {
-        return false
-    }
-}
+// let isGameOver = () => {
+//     if (activeBox.length === limit){
+//         deleteTrapBox();
+//         if (activeBox.length === limit){
+//             console.log("--- isGameOver")
+//             return true
+//         }
+//     } else {
+//         return false
+//     }
+// }
 
 //check won condition
 let isGameWon = () => {
@@ -383,15 +423,28 @@ let handleGameWon = () => {
     showSideBar()
 }
 
+
 // update game shld only check for win loss conditions not data handling
 
 // double check logic when to check for endgame
 let updateDisplay = () => {
     showSideBar();
-    showActive();
-    if (isGameOver()){
-        handleGameEnd();
+    //showActive();
+
+    // go thru the array and update all the obj position
+    let endScreen = 595;
+
+    for (var i = 0; i < activeBox.length; i++) {
+        activeBox[i].updatePosition();
+        if (activeBox[i].x > endScreen){
+            handleGameEnd();
+            return;
+        }
     }
+
+    // if (isGameOver()){
+    //     handleGameEnd();
+    // }
     //console.log(game,"--- updateDisplay")
 }
 

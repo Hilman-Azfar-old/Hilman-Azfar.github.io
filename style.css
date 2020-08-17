@@ -21,26 +21,26 @@ div{
 	background-color: mistyrose;
 }
 
+.move{
+	width: max-content;
+	height: max-content;
+	position: absolute;
+}
+
 .display-ctn{
-	height: 60vh;
+	height: 420px;
 	padding: 0;
 	display: flex;
 	background-color: white;
 	justify-content: space-between;
-
-}
-
-.display-ctn>*{
-	margin: 0;
 }
 
 .display-game{
 	height: 100%;
 	margin-right: 2%;
 	display: inline-flex;
+	position: relative;
 	flex-grow: 3;
-	flex-direction: column;
-	justify-content: flex-start;
 }
 
 .display-side-bar{
@@ -54,11 +54,11 @@ div{
 .display-side-bar-item{
 	flex-direction: column;
 	justify-content: flex-start;
-	height: 4em;
+	height: 60px;
 }
 
 .display-side-bar-item > *{
-	margin: 0.5em;
+	margin: 10px;
 }
 
 .input-panel{
