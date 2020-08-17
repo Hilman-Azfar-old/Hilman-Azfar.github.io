@@ -116,8 +116,8 @@ class box {
         newBox.appendChild(insideText);
 
         // positioning
-        this.x = 0;
-        newBox.style.left = this.x + 'px';
+        this.x = 800;
+        newBox.style.right = this.x + 'px';
 
         let y = Math.floor(Math.random() * 350);
         this.y = y;
@@ -149,10 +149,10 @@ class box {
 
     // update position
     updatePosition () {
-        this.x = this.x + this.velocity
+        this.x = this.x - this.velocity
         let newPos = this.x + 'px';
 
-        this.box.style.left = newPos;
+        this.box.style.right = newPos;
     }
 
     // create new boxes with random text
@@ -439,15 +439,15 @@ let updateDisplay = () => {
     // if normal lose
     // if trap delete
     // not at end update
-    let endScreen = 595;
+    let endScreen = 0;
 
     for (var i = 0; i < activeBox.length; i++) {
         activeBox[i].updatePosition();
         console.log('/// ping ///')
-        if (activeBox[i].x > endScreen && activeBox[i].word === endWord){
+        if (activeBox[i].x < endScreen && activeBox[i].word === endWord){
             console.log('trap detected');
             deleteTrapBox();
-        } else if (activeBox[i].x > endScreen){
+        } else if (activeBox[i].x < endScreen){
             handleGameEnd();
             return;
         }
