@@ -4,7 +4,8 @@ html{
 
 body{
 	height: 100%;
-	margin: 0;
+	width: 1200px;
+	margin: 0 auto;
 	padding: 50px 0;
 	font-size: 100%;
 	box-sizing: border-box;
@@ -13,12 +14,16 @@ body{
 }
 
 div{
-	height: 15%;
-	margin: 10px;
+	width: 100%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	background-color: mistyrose;
+}
+
+.how-to{
+	padding: 30px 0;
+	margin: 30px auto;
 }
 
 .move{
