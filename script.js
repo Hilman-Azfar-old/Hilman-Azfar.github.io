@@ -7,10 +7,10 @@ console.log('Loading script...');
 //let limit = 5;
 
 // refresh every ms data
-let refreshMS = 900;
+let refreshMS = 600;
 
 // frames per second
-let FPS = 1000 / 60;
+let FPS = 1000 / 30;
 
 // timer won condition
 let timer = 10000; //10 sec
