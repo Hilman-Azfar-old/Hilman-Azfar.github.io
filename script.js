@@ -7,19 +7,17 @@ console.log('Loading script...');
 //let limit = 5;
 
 // refresh every ms data
-let refreshMS = 600;
+let refreshMS = 700;
 
 // frames per second
-let FPS = 1000 / 30;
+let FPS = 1000 / 60;
 
 // timer won condition
-let timer = 10000; //10 sec
+// let timer = 10000; //10 sec
 
 // time to next stage
-let nextStageTime = 8000;
+// let nextStageTime = 8000;
 
-// secret word
-let endWord = 'trap';
 //////
 
 // STATE MANAGER
@@ -96,22 +94,128 @@ let resetInput = () => {
 // DATA HANDLING -- checks for changes in data
 ///
 
-let stageText = [['get','it','right'],
-                 ['red','blue','green'],
-                 ['trap','truman','jerome'],]
+// use api to fetch data
+// need to choose:
+// data set
+// combo
+// trap word
+//
+// change class to accept stage
+//
+
+
+let apiArr = ['get','it','right','rad','blu','gren'];
+
+let textArr = [];
+
+let combo = ['get','it','right'];
+
+let endWord = 'trap';
+
+
+
+async function getApiWords(){
+    const path = "http://hp-api.herokuapp.com/api/characters"
+    //let query = '';
+    try {
+        // get data
+        const res = await fetch(path);
+        apiArr = await res.json();
+
+        //sort data
+        // sort for text arr
+        textArr = getTextArr();
+        // sort for combo
+        // endWord
+        endWord = getEndgame()
+
+    } catch(err){
+        textArr = apiArr;
+        console.error(err)
+    }
+}
+
+let getTextArr = () => {
+    let newArr = apiArr.map((obj)=>{
+        var word = obj.patronus;
+        if (word !== "" && word.length < 7){
+            return word
+        }
+    }).filter((item)=>{
+        return item ;
+    })
+    return newArr;
+}
+
+let getEndgame = () => {
+    var index  = Math.floor(Math.random() * apiArr.length)
+    var word = apiArr[index].name.split(' ')[0];
+    return word;
+}
+
+let getCombo = () => {
+    var comboArr = apiArr.map((obj)=>{
+
+        return obj.wand.wood
+
+    }).filter((item)=>{
+        return item !== '';
+    })
+    for (var i = 0; i < combo.length; i++) {
+        var index  = Math.floor(Math.random() * comboArr.length)
+        combo[i] = comboArr[index];
+    }
+    textArr = textArr.concat(combo);
+}
+
+//getApiWords();
+
+//let stageText = [['get','it','right'],
+//                 ['red','blue','green'],
+//                 ['trap','man','rome'],]
 
 let color = ['green', 'blue', 'red']
 
 
 let display = document.querySelector('.display-game');
 
-class box {
-    // arr can be changed to use any data set
-    constructor(arr){
+let defaultSpeed = 0.7;
+let userSpeed = 0.7;
+let handleUserSpeed = () => {
+    userSpeed = parseInt(document.querySelector('.user-speed').value) || defaultSpeed;
+    console.log(userSpeed,"---handleUserSpeed")
+}
+
+class Box {
+    // constructor chooses which type of box to be made
+    constructor(boxType, velocity){
+        var word = this.randomText(textArr)
+        this.velocity = velocity
+        switch(boxType){
+            case 'normal':
+                var newBox = this.createBox(word);
+                this.word = word;
+                this.box = newBox;
+                break;
+            case 'color':
+                var newBox = this.createBox(word);
+                var randColor = this.randomColor();
+                this.word = randColor;
+                newBox.style.backgroundColor = randColor;
+                this.box = newBox;
+                break;
+            case 'trap':
+                var newBox = this.createBox(endWord);
+                this.word = endWord;
+                this.box = newBox;
+                break;
+        }
+    }
+
+    createBox (word) {
         var newBox = document.createElement('div');
         newBox.classList.add('move');
         var insideText = document.createElement('p')
-        var word = this.randomText(arr)
         insideText.innerText = word;
         newBox.appendChild(insideText);
 
@@ -122,23 +226,7 @@ class box {
         let y = Math.floor(Math.random() * 350);
         this.y = y;
         newBox.style.top = y + 'px';
-        this.velocity = 2;
-
-        switch(stage){
-            case 1:
-                this.word = word;
-                this.box = newBox;
-                break;
-            case 2:
-                var randColor = this.randomColor();
-                this.word = randColor;
-                newBox.style.backgroundColor = randColor;
-                this.box = newBox;
-                break;
-            case 3:
-                this.word = word;
-                this.box = newBox;
-        }
+        return newBox;
     }
 
     // display
@@ -174,8 +262,50 @@ let activeBox = [];
 
 // add boxes according to stages
 //
-let updateBox = (arr) => {
-    var newBox = new box(arr[stage-1]);
+let updateBox = () => {
+    // according to stage update diff things
+    let boxType;
+    let allBoxTypes = ['normal', 'color','trap']
+    switch (stage){
+        case 1:
+            // stage 1
+            // normal
+            boxType = allBoxTypes[0]
+            break;
+        case 2:
+            // stage 2
+            // color
+            boxType = allBoxTypes[1]
+            break;
+        case 3:
+            // stage 3
+            // normal + trap
+            // random
+            var randNum = randomNumber(4);
+            if (randNum === 3){
+                boxType = allBoxTypes[2];
+            } else {
+                boxType = allBoxTypes[0];
+            }
+            break;
+        case 4:
+            // stage 4
+            // all
+            var randNum = randomNumber(5);
+            if (randNum === 4){
+                boxType = allBoxTypes[2];
+            } else if (randNum === 3){
+                boxType = allBoxTypes[1];
+            } else {
+                boxType = allBoxTypes[0];
+            }
+            break;
+        case 5:
+            // stage 5
+            // speed up
+            break;
+    }
+    var newBox = new Box(boxType, userSpeed);
     newBox.showBox();
     activeBox.push(newBox)
 }
@@ -192,7 +322,7 @@ let deleteBox = (arr, word) => {
     for (var i = 0; i < arr.length; i++) {
         console.log(arr[i].word, word,'--- deleteBox')
         if (arr[i].word === word){
-            if (word === 'trap') {
+            if (word === endWord) {
                 handleGameEnd();
             }
             child = arr[i].box;
@@ -209,6 +339,7 @@ let deleteBox = (arr, word) => {
         arr = arr.splice(index, 1)
         lastDelete = word;
         if (updateCombo()){
+            console.log(activeCombo,'--- updateCombo')
             addScore(100);
         }
         addScore(10);
@@ -221,7 +352,7 @@ let deleteBox = (arr, word) => {
 }
 
 let deleteTrapBox = () => {
-    if (activeBox[0].word === 'trap'){
+    if (activeBox[0].word === endWord){
         display.removeChild(activeBox[0].box)
         activeBox.shift();
     }
@@ -233,7 +364,7 @@ let score = 0;
 
 let addScore = (num) => {
     score += num;
-    handleStageTimer();
+    handleStage();
 }
 
 
@@ -246,23 +377,26 @@ let resetData = () => {
 
 // combo will be an array of deleted word in specific order
 
-const combo = ['get','it','right'];
 let activeCombo = [];
 
 let updateCombo = () => {
     comboLength = activeCombo.length;
     if ( comboLength === 0 && lastDelete === combo[0]){
         activeCombo[0] = lastDelete;
-        return
+        return false
+    } else if ( comboLength !== 0 && lastDelete === combo[0]){
+        activeCombo = [lastDelete];
+        return false
     } else if ( comboLength === 1 && lastDelete === combo[1]){
         activeCombo[1] = lastDelete;
-        return
+        return false
     } else if ( comboLength === 2 && lastDelete === combo[2]){
         activeCombo = [];
         console.log('combo successful! --- isCombo')
         return true
     }
     activeCombo = [];
+    console.log(activeCombo,"--- updateCombo")
     return false
 }
 
@@ -344,29 +478,33 @@ let endStageLoop = () => {
 }
 
 let updateData = () => {
-    updateBox(stageText);
+    updateBox(apiArr);
 }
 
 // progress stages till stage complete
 // let startStageTimer = () => {
-//     stageTimer = setTimeout(()=>{handleStageTimer();}, nextStageTime)
+//     stageTimer = setTimeout(()=>{handleStage();}, nextStageTime)
 //     console.log('---startStageTimer')
 // }
 
-let handleStageTimer = () => {
+let handleStage = () => {
 
-    if (score > 400){
+    if (score > 600){
         game = 'win'
         handleGameWon();
-        console.log('won ---handleStageTimer')
-    } else if (score > 350){
+        console.log('won ---handleStage')
+    //} else if (score > ){
+      //  stage = 5;
+      //  console.log(stage,'---handleStage')
+    } else if (score > 400){
+        stage = 4;
+        console.log(stage,'---handleStage')
+    } else if (score > 300){
         stage = 3;
-        console.log(stage,'---handleStageTimer')
-//      startStageTimer();
-    } else if (score > 200){
+        console.log(stage,'---handleStage')
+    } else if (score > 100){
         stage = 2;
-        console.log(stage,'---handleStageTimer')
-//      startStageTimer();
+        console.log(stage,'---handleStage')
     }
 }
 
@@ -431,7 +569,7 @@ let handleGameWon = () => {
 
 // double check logic when to check for endgame
 let updateDisplay = () => {
-    showSideBar();
+    //showSideBar();
     //showActive();
 
     // go thru the array and update all the obj position
@@ -440,14 +578,13 @@ let updateDisplay = () => {
     // if trap delete
     // not at end update
     let endScreen = 0;
-
     for (var i = 0; i < activeBox.length; i++) {
         activeBox[i].updatePosition();
-        console.log('/// ping ///')
         if (activeBox[i].x < endScreen && activeBox[i].word === endWord){
             console.log('trap detected');
             deleteTrapBox();
         } else if (activeBox[i].x < endScreen){
+            console.log('edge collision --- updateDisplay')
             handleGameEnd();
             return;
         }
@@ -469,7 +606,11 @@ let handleGameEnd = () => {
 }
 
 
+// Helper functions
 
+let randomNumber = (num) => {
+    return Math.floor(Math.random() * num);
+}
 
 
 
