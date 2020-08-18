@@ -6,8 +6,7 @@ console.log('Loading script...');
 // game over array size (non-inclusive)
 //let limit = 5;
 
-// refresh every ms data
-let refreshMS = 700;
+
 
 // frames per second
 let FPS = 1000 / 60;
@@ -30,6 +29,7 @@ let game = 'over';
 let gameStart = () => {
     if (game === 'over' || game === 'win'){
         game = 'start';
+        handleUserDifficulty();
         reset();
         showSideBar();
         startAllLoops();
@@ -87,7 +87,39 @@ let resetInput = () => {
     userInputText.value = '';
 }
 
+// get speed of boxes
+let display = document.querySelector('.display-game');
 
+let defaultSpeed = 0.9;
+let userSpeed = 0.9;
+let handleUserSpeed = () => {
+    userSpeed = parseInt(document.querySelector('.user-speed').value) || defaultSpeed;
+    console.log(userSpeed,"---handleUserSpeed")
+}
+
+// refresh every ms data
+// rate of boxes spawning
+let refreshMS = 1200;
+let handleUserDifficulty = () => {
+    let difficulty = document.querySelector('.user-difficulty').value;
+    switch(difficulty){
+        case 'easy':
+            refreshMS = 1500;
+            userSpeed = 0.7;
+            break;
+        case 'moderate':
+            refreshMS = 1000;
+            userSpeed = 1;
+            break;
+        case 'hard':
+            refreshMS = 800;
+            userSpeed = 2;
+            break;
+        case 'insane':
+            refreshMS = 100;
+            userSpeed = 3;
+    }
+}
 
 
 ///
@@ -168,6 +200,9 @@ let getCombo = () => {
     textArr = textArr.concat(combo);
 }
 
+// remove this when you uncomment the getApiWords
+textArr = apiArr;
+
 //getApiWords();
 
 //let stageText = [['get','it','right'],
@@ -177,14 +212,6 @@ let getCombo = () => {
 let color = ['green', 'blue', 'red']
 
 
-let display = document.querySelector('.display-game');
-
-let defaultSpeed = 0.7;
-let userSpeed = 0.7;
-let handleUserSpeed = () => {
-    userSpeed = parseInt(document.querySelector('.user-speed').value) || defaultSpeed;
-    console.log(userSpeed,"---handleUserSpeed")
-}
 
 class Box {
     // constructor chooses which type of box to be made
@@ -209,6 +236,12 @@ class Box {
                 this.word = endWord;
                 this.box = newBox;
                 break;
+            case 'fast':
+                var newBox = this.createBox('zoom');
+                newBox.style.backgroundColor = 'fuchsia'
+                this.word = 'zoom';
+                this.velocity = this.velocity * 2;
+                this.box = newBox;
         }
     }
 
@@ -265,7 +298,7 @@ let activeBox = [];
 let updateBox = () => {
     // according to stage update diff things
     let boxType;
-    let allBoxTypes = ['normal', 'color','trap']
+    let allBoxTypes = ['normal', 'color','trap','fast']
     switch (stage){
         case 1:
             // stage 1
@@ -303,6 +336,12 @@ let updateBox = () => {
         case 5:
             // stage 5
             // speed up
+            var randNum = randomNumber(4);
+            if (randNum === 3){
+                boxType = allBoxTypes[3];
+            } else {
+                boxType = allBoxTypes[0];
+            }
             break;
     }
     var newBox = new Box(boxType, userSpeed);

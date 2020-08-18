@@ -45,8 +45,19 @@ div{
 	margin: 20px auto;
 	padding: 0;
 	display: flex;
+	position: relative;
 	background-color: white;
 	justify-content: space-between;
+}
+
+.overlay{
+	display: none;
+	position: absolute;
+	height: 100%;
+	width: 800px;
+	z-index: 100;
+	opacity: 0.8;
+	background-color: lightseagreen;
 }
 
 .display-game{
@@ -78,11 +89,14 @@ div{
 }
 
 .input-panel{
-	width: max-content;
+	width: 100%;
 	margin: 0 auto;
-	padding: 20px 240px;
-	position: relative;
+	padding: 20px 40px;
+	box-sizing: border-box;
+
+	/*position: relative;*/
 	border-radius: 10px;
+	justify-content: space-evenly;
 }
 
 .input-panel #user-input{
@@ -92,13 +106,16 @@ div{
 }
 
 .input-panel #start{
-	right: 4%;
+	/*right: 4%;*/
 	padding: 0.5em;
-	position: absolute;
+	/*position: absolute;*/
 	font-size: 1.75em;
 }
 
-
+.options{
+	width: max-content;
+	flex-direction: column;
+}
 
 
 

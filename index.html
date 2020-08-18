@@ -10,6 +10,7 @@
         <h1>UNDER PRESSURE</h1>
     </div> -->
     <div class="display-ctn">
+        <div class="overlay"></div>
         <div class="display-game"></div>
         <div class="display-side-bar">
             <div class="display-side-bar-item game-state">
@@ -35,8 +36,16 @@
         </div>
     </div>
     <div class="input-panel">
-        <label for="user-speed">Choose your speed:</label>
-        <input type="number" name="user-speed" class="user-speed" oninput="handleUserSpeed()">
+        <div class="options">
+            <div class="option-1">
+                <label for="user-speed">Choose your speed:</label>
+                <input type="number" name="user-speed" class="user-speed" oninput="handleUserSpeed()">
+            </div>
+            <div class="option-2">
+                <label for="user-difficulty">Choose your difficulty:</label>
+                <input type="text" name="user-difficulty" class="user-difficulty">
+            </div>
+        </div>
         <input type="text" name="user-input" id="user-input" >
         <button id="start" onclick="gameStart()">START</button>
     </div>
