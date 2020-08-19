@@ -5,12 +5,28 @@
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-    <header></header>
-    <!-- <div class="heads-up">
+    <header>
         <h1>UNDER PRESSURE</h1>
-    </div> -->
+    </header>
+    <div class="how-to-overlay" id="how-to-1">
+        <h1>overlay 1</h1>
+        <button onclick="overlayTwo()">CLOSE</button>
+    </div>
+    <div class="how-to-overlay" id="how-to-2" style="display: none;">
+        <h1>overlay 2</h1>
+        <button onclick="overlayThree()">CLOSE</button>
+    </div>
+    <div class="how-to-overlay" id="how-to-3" style="display: none;">
+        <h1>overlay 3</h1>
+        <button onclick="overlayOver()">CLOSE</button>
+    </div>
     <div class="display-ctn">
-        <div class="overlay"></div>
+        <div class="overlay" id="start-overlay">
+            <h1>START</h1>
+        </div>
+        <div class="overlay" id="gameover-overlay">
+            <h1>GAME OVER</h1>
+        </div>
         <div class="display-game"></div>
         <div class="display-side-bar">
             <div class="display-side-bar-item game-state">
@@ -43,25 +59,39 @@
             </div>
             <div class="option-2">
                 <label for="user-difficulty">Choose your difficulty:</label>
-                <input type="text" name="user-difficulty" class="user-difficulty">
+                <select name="user-difficulty" id="user-difficulty">
+                    <option value="easy">Easy</option>
+                    <option value="moderate">Moderate</option>
+                    <option value="hard">Hard</option>
+                    <option value="insane">Insane</option>
+                </select>
             </div>
         </div>
         <input type="text" name="user-input" id="user-input" >
         <button id="start" onclick="gameStart()">START</button>
     </div>
-    <div class="how-to">
-        <h2>How to play the game</h2>
-        <ul>
-            <li>Press start to begin</li>
-            <li>Type in the text in the boxes</li>
-            <li>You can use space or enter to lock in the word</li>
-            <li>Find combos for score multiplier</li>
-            <li>Watch out for special boxes</li>
-            <li>Survive the last stage</li>
-            <li>Have fun!</li>
-        </ul>
+    <div class="instructions">
+        <div class="how-to">
+            <h2>How to play the game</h2>
+            <ul>
+                <li>Press start to begin</li>
+                <li>Type in the text in the boxes</li>
+                <li>You can use space or enter to lock in the word</li>
+                <li>Find combos for score multiplier</li>
+                <li>Watch out for special boxes</li>
+                <li>Survive the last stage</li>
+                <li>Have fun!</li>
+            </ul>
+        </div>
+        <div class="combo-list">
+            <h2>Combo list</h2>
+            <ul>
+                <li>COMBO 1</li>
+                <li>COMBO 2</li>
+                <li>COMBO 3</li>
+            </ul>
+        </div>
     </div>
-    <!-- <div class="how-to"><p>HOW TO</p></div> -->
     <script type="text/javascript" src="script.js"></script>
 </body>
 </html>

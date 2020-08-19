@@ -29,6 +29,7 @@ let game = 'over';
 let gameStart = () => {
     if (game === 'over' || game === 'win'){
         game = 'start';
+        triggerStartOverlay();
         handleUserDifficulty();
         reset();
         showSideBar();
@@ -99,9 +100,9 @@ let handleUserSpeed = () => {
 
 // refresh every ms data
 // rate of boxes spawning
-let refreshMS = 1200;
+let refreshMS;
 let handleUserDifficulty = () => {
-    let difficulty = document.querySelector('.user-difficulty').value;
+    let difficulty = document.querySelector('#user-difficulty').value;
     switch(difficulty){
         case 'easy':
             refreshMS = 1500;
@@ -113,12 +114,14 @@ let handleUserDifficulty = () => {
             break;
         case 'hard':
             refreshMS = 800;
-            userSpeed = 2;
+            userSpeed = 1.5;
             break;
         case 'insane':
-            refreshMS = 100;
-            userSpeed = 3;
+            refreshMS = 300;
+            userSpeed = 1.9;
+            break;
     }
+    console.log(difficulty,'---handleUserDifficulty')
 }
 
 
@@ -483,6 +486,25 @@ let resetDisplay = () => {
     gameHeading.innerText = game;
 }
 
+// ALL OVERLAYS HERE
+
+let triggerStartOverlay = () => {
+    var startOverlay = document.querySelector('#start-overlay');
+    startOverlay.classList.add('fade');
+    setTimeout(()=>{
+        startOverlay.classList.remove('fade');
+        console.log('---triggerStartOverlay')
+    },2000);
+}
+
+let triggerGameoverOverlay = () => {
+    var startOverlay = document.querySelector('#gameover-overlay');
+    startOverlay.classList.add('translate');
+    setTimeout(()=>{
+        startOverlay.classList.remove('translate');
+        console.log('---triggerStartOverlay')
+    },3000);
+}
 
 
 
@@ -640,6 +662,7 @@ let handleGameEnd = () => {
 //    endStageTimer();
     endAllLoops();
     gameOver();
+    triggerGameoverOverlay()
     showSideBar();
     console.log("--- handleGameEnd")
 }
@@ -651,11 +674,69 @@ let randomNumber = (num) => {
     return Math.floor(Math.random() * num);
 }
 
+// instructions sequence
+
+// <li>Press start to begin</li>
+// <li>Type in the text in the boxes</li>
+// <li>You can use space or enter to lock in the word</li>
+// <li>Find combos for score multiplier</li>
+// <li>Watch out for special boxes</li>
+// <li>Survive the last stage</li>
+// <li>Have fun!</li>
+
+// onload show first overlay √
+let overlay;
+let overlayOne = () => {
+    let focusOnPanel = document.querySelector('.display-game');
+    focusOnPanel.scrollIntoView({behavior: "smooth",block:"center", inline: "end"});
+    overlay = document.getElementById('how-to-1');
+}
+
+// explain game concept
+// when close √
+// display none
+// show next overlay and bring focus √
+
+let overlayTwo = () => {
+    let focusOnPanel = document.querySelector('.instructions');
+    focusOnPanel.scrollIntoView({behavior: "smooth",block:"center", inline: "end"});
+    overlay.style.display = 'none';
+    overlay = document.getElementById('how-to-2');
+    overlay.style.display = 'flex';
+
+}
+
+// explain special box type
+// indicate special combinations below
+// when close
+// display none
+// show next overlay and bring focus
+
+let overlayThree = () => {
+    let focusOnPanel = document.querySelector('.input-panel');
+    focusOnPanel.scrollIntoView({behavior: "smooth",block:"center", inline: "end"});
+        overlay.style.display = 'none';
+    overlay = document.getElementById('how-to-3');
+    overlay.style.display = 'flex';
+}
 
 
+// explain how to start game
+// when close
+// display none
+// bring focus to game area
 
+let overlayOver = () => {
+    let focusOnPanel = document.querySelector('.display-game');
+    focusOnPanel.scrollIntoView({behavior: "smooth",block:"center", inline: "end"});
+        overlay.style.display = 'none';
+    overlay = document.getElementById('how-to-3');
+    overlay.style.display = 'none';
+}
 
-
+window.onload = () => {
+    overlayOne();
+}
 
 
 
