@@ -1,23 +1,11 @@
 console.log('Loading script...');
 
-//////
+
+
 //// HARD CODED GAME SETTINGS
-
-// game over array size (non-inclusive)
-//let limit = 5;
-
-
-
 // frames per second
 let FPS = 1000 / 60;
 
-// timer won condition
-// let timer = 10000; //10 sec
-
-// time to next stage
-// let nextStageTime = 8000;
-
-//////
 
 // STATE MANAGER
 
@@ -31,6 +19,7 @@ let gameStart = () => {
         game = 'start';
         triggerStartOverlay();
         handleUserDifficulty();
+        handleDataSet();
         reset();
         showSideBar();
         startAllLoops();
@@ -51,7 +40,6 @@ let reset = () => {
     resetInput();
     stage = 1;
 }
-
 
 
 // USER HANDLING
@@ -91,11 +79,22 @@ let resetInput = () => {
 // get speed of boxes
 let display = document.querySelector('.display-game');
 
-let defaultSpeed = 0.9;
-let userSpeed = 0.9;
-let handleUserSpeed = () => {
-    userSpeed = parseInt(document.querySelector('.user-speed').value) || defaultSpeed;
-    console.log(userSpeed,"---handleUserSpeed")
+let handleDataSet = () => {
+    let dataSet = document.querySelector('#data-set').value;
+    console.log(dataSet,"---handleUserSpeed")
+    switch(dataSet){
+        case 'test':
+            textArr = testArr;
+            break;
+        case 'food':
+            textArr = ['coke','candy','cake','ramen','double','down','burger'];
+            combo = ['double','down','burger'];
+            endWord = 'Boba'
+            break;
+        case 'harry':
+            getApiWords();
+            break;
+    }
 }
 
 // refresh every ms data
@@ -134,19 +133,13 @@ let handleUserDifficulty = () => {
 // data set
 // combo
 // trap word
-//
-// change class to accept stage
-//
 
 
-let apiArr = ['get','it','right','rad','blu','gren'];
-
-let textArr = [];
-
+let apiArr = [];
+let testArr = ['get','it','right','rad','blu','gren'];
+let textArr = ['text'];
 let combo = ['get','it','right'];
-
 let endWord = 'trap';
-
 
 
 async function getApiWords(){
@@ -156,16 +149,14 @@ async function getApiWords(){
         // get data
         const res = await fetch(path);
         apiArr = await res.json();
-
         //sort data
         // sort for text arr
         textArr = getTextArr();
         // sort for combo
         // endWord
         endWord = getEndgame()
-
     } catch(err){
-        textArr = apiArr;
+        textArr = testArr;
         console.error(err)
     }
 }
@@ -190,9 +181,7 @@ let getEndgame = () => {
 
 let getCombo = () => {
     var comboArr = apiArr.map((obj)=>{
-
         return obj.wand.wood
-
     }).filter((item)=>{
         return item !== '';
     })
@@ -203,17 +192,9 @@ let getCombo = () => {
     textArr = textArr.concat(combo);
 }
 
-// remove this when you uncomment the getApiWords
-textArr = apiArr;
 
-//getApiWords();
-
-//let stageText = [['get','it','right'],
-//                 ['red','blue','green'],
-//                 ['trap','man','rome'],]
-
+let userSpeed = 0.9;
 let color = ['green', 'blue', 'red']
-
 
 
 class Box {
@@ -224,6 +205,7 @@ class Box {
         switch(boxType){
             case 'normal':
                 var newBox = this.createBox(word);
+                newBox.style.color = 'white'
                 this.word = word;
                 this.box = newBox;
                 break;
@@ -231,11 +213,13 @@ class Box {
                 var newBox = this.createBox(word);
                 var randColor = this.randomColor();
                 this.word = randColor;
+                newBox.style.color = 'white'
                 newBox.style.backgroundColor = randColor;
                 this.box = newBox;
                 break;
             case 'trap':
                 var newBox = this.createBox(endWord);
+                newBox.style.color = 'white'
                 this.word = endWord;
                 this.box = newBox;
                 break;
@@ -243,6 +227,7 @@ class Box {
                 var newBox = this.createBox('zoom');
                 newBox.style.backgroundColor = 'fuchsia'
                 this.word = 'zoom';
+                newBox.style.color = 'white'
                 this.velocity = this.velocity * 2;
                 this.box = newBox;
         }
@@ -506,6 +491,14 @@ let triggerGameoverOverlay = () => {
     },3000);
 }
 
+let triggerGamewonOverlay = () => {
+    var startOverlay = document.querySelector('#gamewon-overlay');
+    startOverlay.classList.add('translate');
+    setTimeout(()=>{
+        startOverlay.classList.remove('translate');
+        console.log('---triggerStartOverlay')
+    },3000);
+}
 
 
 ///// ALL LOOPS /////
@@ -554,9 +547,9 @@ let handleStage = () => {
         game = 'win'
         handleGameWon();
         console.log('won ---handleStage')
-    //} else if (score > ){
-      //  stage = 5;
-      //  console.log(stage,'---handleStage')
+    } else if (score > 500){
+        stage = 5;
+        console.log(stage,'---handleStage')
     } else if (score > 400){
         stage = 4;
         console.log(stage,'---handleStage')
@@ -620,6 +613,7 @@ let isGameWon = () => {
 }
 
 let handleGameWon = () => {
+    triggerGamewonOverlay()
     endAllLoops();
     console.log(game)
     showSideBar()
@@ -690,6 +684,17 @@ let overlayOne = () => {
     let focusOnPanel = document.querySelector('.display-game');
     focusOnPanel.scrollIntoView({behavior: "smooth",block:"center", inline: "end"});
     overlay = document.getElementById('how-to-1');
+
+    let boxCtn = document.querySelector('.box-ctn');
+
+    let allBoxTypes = ['normal', 'color','trap','fast']
+
+    for (var i = 0; i < allBoxTypes.length; i++) {
+
+        var newBox = new Box(allBoxTypes[i], 0);
+        newBox.box.style.position = 'initial';
+        boxCtn.appendChild(newBox.box);
+    }
 }
 
 // explain game concept
@@ -735,7 +740,7 @@ let overlayOver = () => {
 }
 
 window.onload = () => {
-    overlayOne();
+    // overlayOne();
 }
 
 

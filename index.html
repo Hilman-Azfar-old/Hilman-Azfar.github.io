@@ -8,17 +8,29 @@
     <header>
         <h1>UNDER PRESSURE</h1>
     </header>
-    <div class="how-to-overlay" id="how-to-1">
-        <h1>overlay 1</h1>
-        <button onclick="overlayTwo()">CLOSE</button>
+    <div class="how-to-overlay" id="how-to-1" style="display: none;">
+        <div class="how-to-info">
+            <div class="box-ctn"></div>
+            <p>Prevent boxes from reaching the end by typing in the text inside the box!</p>
+            <p>Look out for special boxes that will trick you!</p>
+            <button onclick="overlayTwo()">CLOSE</button>
+        </div>
     </div>
     <div class="how-to-overlay" id="how-to-2" style="display: none;">
-        <h1>overlay 2</h1>
-        <button onclick="overlayThree()">CLOSE</button>
+        <div class="how-to-info">
+            <p>Trigger combos by deleting the boxes in the right sequence.</p>
+            <p> These combos grant you special powers!</p>
+            <button onclick="overlayThree()">CLOSE</button>
+        </div>
     </div>
     <div class="how-to-overlay" id="how-to-3" style="display: none;">
-        <h1>overlay 3</h1>
-        <button onclick="overlayOver()">CLOSE</button>
+        <div class="how-to-info">
+            <p>To begin, press "Start"</p>
+            <p>You can use spacebar or enter key to lock in your words</p>
+            <p>Select theme/difficulty in this dropbar</p>
+            <p>Good luck and gambatte!</p>
+            <button onclick="overlayOver()">CLOSE</button>
+        </div>
     </div>
     <div class="display-ctn">
         <div class="overlay" id="start-overlay">
@@ -26,6 +38,9 @@
         </div>
         <div class="overlay" id="gameover-overlay">
             <h1>GAME OVER</h1>
+        </div>
+        <div class="overlay" id="gamewon-overlay">
+            <h1>GAME WON</h1>
         </div>
         <div class="display-game"></div>
         <div class="display-side-bar">
@@ -54,11 +69,15 @@
     <div class="input-panel">
         <div class="options">
             <div class="option-1">
-                <label for="user-speed">Choose your speed:</label>
-                <input type="number" name="user-speed" class="user-speed" oninput="handleUserSpeed()">
+                <label for="data-set">Choose your theme: </label>
+                <select name="data-set" id="data-set">
+                    <option value="test">Test</option>
+                    <option value="food">Food</option>
+                    <option value="harry">Harry Potter</option>
+                </select>
             </div>
             <div class="option-2">
-                <label for="user-difficulty">Choose your difficulty:</label>
+                <label for="user-difficulty">Choose your difficulty: </label>
                 <select name="user-difficulty" id="user-difficulty">
                     <option value="easy">Easy</option>
                     <option value="moderate">Moderate</option>
@@ -73,7 +92,7 @@
     <div class="instructions">
         <div class="how-to">
             <h2>How to play the game</h2>
-            <ul>
+            <ol>
                 <li>Press start to begin</li>
                 <li>Type in the text in the boxes</li>
                 <li>You can use space or enter to lock in the word</li>
@@ -81,15 +100,19 @@
                 <li>Watch out for special boxes</li>
                 <li>Survive the last stage</li>
                 <li>Have fun!</li>
-            </ul>
+            </ol>
         </div>
         <div class="combo-list">
-            <h2>Combo list</h2>
-            <ul>
-                <li>COMBO 1</li>
-                <li>COMBO 2</li>
-                <li>COMBO 3</li>
-            </ul>
+            <table>
+                <tr>
+                    <th>Perk</th>
+                    <th>Combo List</th>
+                </tr>
+                <tr>
+                    <td>Score multiplier</td>
+                    <td>combo + combo + combo</td>
+                </tr>
+            </table>
         </div>
     </div>
     <script type="text/javascript" src="script.js"></script>
