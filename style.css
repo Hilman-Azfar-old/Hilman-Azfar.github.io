@@ -19,7 +19,7 @@ background: -webkit-linear-gradient(to right, #ff8e80, #c53a9d, #4a2480);
 background: linear-gradient(to right, #ff8e80, #4a2480);
 
 	font-family: Arial, san-serif;
-	--border-width: calc((100vw - 1050px) / 2);
+	--border-width: calc((100vw - 1090px) / 2);
 }
 
 div{
@@ -87,38 +87,37 @@ header h1{
 	color: blue;
 	padding: 20px;
 	margin: 5px;
-	font-size: 1.2em;
+	font-size: 1.25em;
 }
 
 .how-to-info > button{
 	margin-top: 10px;
 	padding: 10px 20px;
+	font-size: 1.1em;
 }
 
 #how-to-1{
-	width: 1050px;
-	height: 420px;
+	width: 1090px;
+	height: 460px;
 	border-style: solid;
 	border-width: 170px var(--border-width) 720px var(--border-width);
 	border-color: rgba(0,0,0,0.6);
 }
 
 #how-to-2{
-	width: 1050px;
-	height: 220px;
+	width: 1090px;
+	height: 260px;
 	border-style: solid;
-	border-width: 750px var(--border-width) 30px var(--border-width);
+	border-width: 810px var(--border-width) 30px var(--border-width);
 	border-color: rgba(0,0,0,0.6);
-	--border-width: calc((100vw - 1050px) / 2);
 }
 
 #how-to-3{
-	width: 1050px;
-	height: 120px;
+	width: 1090px;
+	height: 160px;
 	border-style: solid;
-	border-width: 610px var(--border-width) 300px var(--border-width);
+	border-width: 640px var(--border-width) 300px var(--border-width);
 	border-color: rgba(0,0,0,0.6);
-	--border-width: calc((100vw - 1050px) / 2);
 }
 
 .move{
@@ -152,6 +151,7 @@ header h1{
 	width: 800px;
 	opacity: 0;
 	color: grey;
+	z-index: 5;
 	justify-content: flex-start;
 	overflow: overlay;
 }
@@ -223,8 +223,12 @@ header h1{
 	height: 120px;
 }
 
-.display-side-bar-item > *{
+.display-side-bar-item > :not(p){
 	margin: 10px;
+}
+
+.display-side-bar-item > p{
+	margin: 5px;
 }
 
 .input-panel{
@@ -248,7 +252,6 @@ header h1{
 	color: #4a2480;
 	-webkit-text-stroke: 1px;
 	-webkit-text-stroke-color: #051f39;
-
 }
 
 .options{

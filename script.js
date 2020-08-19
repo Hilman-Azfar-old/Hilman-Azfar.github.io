@@ -22,6 +22,7 @@ let gameStart = () => {
         handleDataSet();
         reset();
         showSideBar();
+        showCombo();
         startAllLoops();
         userInputText.focus();
         console.log(game,"--- gameStart")
@@ -79,12 +80,15 @@ let resetInput = () => {
 // get speed of boxes
 let display = document.querySelector('.display-game');
 
+
 let handleDataSet = () => {
     let dataSet = document.querySelector('#data-set').value;
     console.log(dataSet,"---handleUserSpeed")
     switch(dataSet){
         case 'test':
             textArr = testArr;
+            combo = testCombo;
+            endWord = testEndWord;
             break;
         case 'food':
             textArr = ['coke','candy','cake','ramen','double','down','burger'];
@@ -92,7 +96,9 @@ let handleDataSet = () => {
             endWord = 'Boba'
             break;
         case 'harry':
-            getApiWords();
+            textArr = getTextArr();
+            endGame = getEndgame();
+            setCombo();
             break;
     }
 }
@@ -135,12 +141,14 @@ let handleUserDifficulty = () => {
 // trap word
 
 
+let textArr = ['text'];
+let combo = '';
+let endWord = 'text';
+
 let apiArr = [];
 let testArr = ['get','it','right','rad','blu','gren'];
-let textArr = ['text'];
-let combo = ['get','it','right'];
-let endWord = 'trap';
-
+let testCombo = ['get','it','right'];
+let testEndWord = 'trap';
 
 async function getApiWords(){
     const path = "http://hp-api.herokuapp.com/api/characters"
@@ -149,12 +157,6 @@ async function getApiWords(){
         // get data
         const res = await fetch(path);
         apiArr = await res.json();
-        //sort data
-        // sort for text arr
-        textArr = getTextArr();
-        // sort for combo
-        // endWord
-        endWord = getEndgame()
     } catch(err){
         textArr = testArr;
         console.error(err)
@@ -179,7 +181,7 @@ let getEndgame = () => {
     return word;
 }
 
-let getCombo = () => {
+let setCombo = () => {
     var comboArr = apiArr.map((obj)=>{
         return obj.wand.wood
     }).filter((item)=>{
@@ -192,6 +194,7 @@ let getCombo = () => {
     textArr = textArr.concat(combo);
 }
 
+getApiWords();
 
 let userSpeed = 0.9;
 let color = ['green', 'blue', 'red']
@@ -428,18 +431,7 @@ let updateCombo = () => {
 }
 
 
-
 // DISPLAY HANDLING -- updates to show things
-
-// show all active box in display game div starting with the oldest
-// let display = document.querySelector('.display-game');
-// let showActive = () => {
-//     display.innerHTML = '';
-//     for (var i = activeBox.length - 1; i > -1 ; i--) {
-//         display.appendChild(activeBox[i].box);
-//     }
-// }
-
 // show game state in the side bar
 // show point system
 let gameHeading = document.querySelector('.game-state>p');
@@ -449,7 +441,6 @@ let lastDelHeading = document.querySelector('.last-delete>p');
 let comboHeading = document.querySelector('.combo>p');
 
 let showSideBar = () => {
-
     var comboHeadingText = () => {
         var concat = '';
         for (var i = 0; i < activeCombo.length; i++) {
@@ -464,40 +455,15 @@ let showSideBar = () => {
     comboHeading.innerText = comboHeadingText();
 }
 
+let showCombo = () => {
+    var comboText = document.getElementById('table-combo');
+    comboText.innerText = `${combo[0]} + ${combo[1]} + ${combo[2]}`;
+}
 
 // change the displays to the default
 let resetDisplay = () => {
     display.innerHTML = ''
     gameHeading.innerText = game;
-}
-
-// ALL OVERLAYS HERE
-
-let triggerStartOverlay = () => {
-    var startOverlay = document.querySelector('#start-overlay');
-    startOverlay.classList.add('fade');
-    setTimeout(()=>{
-        startOverlay.classList.remove('fade');
-        console.log('---triggerStartOverlay')
-    },2000);
-}
-
-let triggerGameoverOverlay = () => {
-    var startOverlay = document.querySelector('#gameover-overlay');
-    startOverlay.classList.add('translate');
-    setTimeout(()=>{
-        startOverlay.classList.remove('translate');
-        console.log('---triggerStartOverlay')
-    },3000);
-}
-
-let triggerGamewonOverlay = () => {
-    var startOverlay = document.querySelector('#gamewon-overlay');
-    startOverlay.classList.add('translate');
-    setTimeout(()=>{
-        startOverlay.classList.remove('translate');
-        console.log('---triggerStartOverlay')
-    },3000);
 }
 
 
@@ -513,18 +479,15 @@ let endAllLoops = () => {
     endGameLoop();
 }
 
-
 // Data loops + stage tracker
 let stage = 1;
 let stageLoop;
 let stageTimer;
 
-
 let startStageLoop = () => {
     stageLoop = setInterval(()=>{updateData();},refreshMS)
     console.log('--- startStageLoop')
 }
-
 
 let endStageLoop = () => {
     clearInterval(stageLoop);
@@ -536,13 +499,7 @@ let updateData = () => {
 }
 
 // progress stages till stage complete
-// let startStageTimer = () => {
-//     stageTimer = setTimeout(()=>{handleStage();}, nextStageTime)
-//     console.log('---startStageTimer')
-// }
-
 let handleStage = () => {
-
     if (score > 600){
         game = 'win'
         handleGameWon();
@@ -562,13 +519,6 @@ let handleStage = () => {
     }
 }
 
-//let endStageTimer = () => {
-//    clearTimeout(stageTimer);
-//}
-
-
-
-
 
 // GAME LOOP --
 // check for changes in display, data and game state
@@ -585,19 +535,6 @@ let endGameLoop = () => {
     clearInterval(gameLoop);
     console.log("--- endGameLoop")
 }
-
-// check active length equals limit
-// let isGameOver = () => {
-//     if (activeBox.length === limit){
-//         deleteTrapBox();
-//         if (activeBox.length === limit){
-//             console.log("--- isGameOver")
-//             return true
-//         }
-//     } else {
-//         return false
-//     }
-// }
 
 //check won condition
 let isGameWon = () => {
@@ -619,19 +556,13 @@ let handleGameWon = () => {
     showSideBar()
 }
 
-
-// update game shld only check for win loss conditions not data handling
-
 // double check logic when to check for endgame
 let updateDisplay = () => {
-    //showSideBar();
-    //showActive();
 
     // go thru the array and update all the obj position
     // check if box at end of screen
     // if normal lose
     // if trap delete
-    // not at end update
     let endScreen = 0;
     for (var i = 0; i < activeBox.length; i++) {
         activeBox[i].updatePosition();
@@ -644,11 +575,6 @@ let updateDisplay = () => {
             return;
         }
     }
-
-    // if (isGameOver()){
-    //     handleGameEnd();
-    // }
-    //console.log(game,"--- updateDisplay")
 }
 
 let handleGameEnd = () => {
@@ -668,15 +594,6 @@ let randomNumber = (num) => {
     return Math.floor(Math.random() * num);
 }
 
-// instructions sequence
-
-// <li>Press start to begin</li>
-// <li>Type in the text in the boxes</li>
-// <li>You can use space or enter to lock in the word</li>
-// <li>Find combos for score multiplier</li>
-// <li>Watch out for special boxes</li>
-// <li>Survive the last stage</li>
-// <li>Have fun!</li>
 
 // onload show first overlay √
 let overlay;
@@ -725,7 +642,6 @@ let overlayThree = () => {
     overlay.style.display = 'flex';
 }
 
-
 // explain how to start game
 // when close
 // display none
@@ -739,8 +655,37 @@ let overlayOver = () => {
     overlay.style.display = 'none';
 }
 
+// ALL OVERLAYS HERE
+
+let triggerStartOverlay = () => {
+    var startOverlay = document.querySelector('#start-overlay');
+    startOverlay.classList.add('fade');
+    setTimeout(()=>{
+        startOverlay.classList.remove('fade');
+        console.log('---triggerStartOverlay')
+    },2000);
+}
+
+let triggerGameoverOverlay = () => {
+    var startOverlay = document.querySelector('#gameover-overlay');
+    startOverlay.classList.add('translate');
+    setTimeout(()=>{
+        startOverlay.classList.remove('translate');
+        console.log('---triggerStartOverlay')
+    },3000);
+}
+
+let triggerGamewonOverlay = () => {
+    var startOverlay = document.querySelector('#gamewon-overlay');
+    startOverlay.classList.add('translate');
+    setTimeout(()=>{
+        startOverlay.classList.remove('translate');
+        console.log('---triggerStartOverlay')
+    },3000);
+}
+
 window.onload = () => {
-    // overlayOne();
+    overlayOne();
 }
 
 
