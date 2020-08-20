@@ -42,15 +42,9 @@ Overall layout shld look like a game console or arcade machine. Color palette mi
 (MVP)
 The player has to prevent block of texts moving from one side of the screen from reaching the other side. To prevent this, the player has to type in text with corresponds with the text inside the blocks.
 
-**Furthers**
-**Furthers**
-**Furthers**
-**Furthers**
-**Furthers**
-**Furthers**
-**Furthers**
-**Furthers**
-**Furthers**
-**Furthers**
 
 **WIREFRAMING**
+
+![](brief.png) 
+
+![](basic.png) 
