@@ -35,6 +35,7 @@ The game needs to:
 
 Overall layout shld look like a game console or arcade machine. Color palette might follow retro theme.
 
+
 ### Gameplay ideas
 
 **Main concept**

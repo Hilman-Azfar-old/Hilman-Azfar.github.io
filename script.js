@@ -1,7 +1,6 @@
 console.log('Loading script...');
 
 
-
 //// HARD CODED GAME SETTINGS
 // frames per second
 let FPS = 1000 / 60;
@@ -96,9 +95,15 @@ let handleDataSet = () => {
             endWord = 'Boba'
             break;
         case 'harry':
-            textArr = getTextArr();
-            endGame = getEndgame();
-            setCombo();
+            try{
+                textArr = getTextArr();
+                endGame = getEndgame();
+                setCombo();
+            } catch {
+                textArr = testArr;
+                combo = testCombo;
+                endWord = testEndWord;
+            }
             break;
     }
 }
